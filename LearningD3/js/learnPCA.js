@@ -105,7 +105,7 @@ Promise.all([
         dataSPCA[i] = {};
         dataSPCA[i].mode = 'markers';
         dataSPCA[i].type = 'scatter';
-        dataSPCA[i].name = 'Principal component ' + i;
+        dataSPCA[i].name = groupName[i];
         dataSPCA[i].marker = {size: 12};
         dataSPCA[i].x = [];
         dataSPCA[i].y = [];
