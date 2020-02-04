@@ -2,5 +2,8 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/LearningD3/lib/deeplearnjs" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/LearningD3/lib/eigenjs" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/LearningD3/lib/linear-algebra" vcs="Git" />
   </component>
 </project>

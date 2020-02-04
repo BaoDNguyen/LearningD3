@@ -11,29 +11,33 @@
   <link rel="apple-touch-icon" href="icon.png">
   <!-- Place favicon.ico in the root directory -->
 
-  <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/main.css">
-  <link rel="stylesheet" href="css/zoom_drag.css">
-  <meta name="theme-color" content="#fafafa">
-</head>
-
-<body>
-  <!--Design body of the web-->
-  <svg id="axis-svg" class="plot"></svg>
-  <canvas id="plot-canvas" class="plot"></canvas>
-
-
   <!-- Add library here -->
   <script src="lib/d3/d3.min.js"></script>
-  <script src="lib/Cindy.js"></script>
-<!--  <script src="lib/d3-axis/d3-axis.min.js"></script>-->
+  <script src="lib/lalolib/lalolib.js"></script>
+  <!--  <script src="lib/plotly.min.js"></script>-->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <script src="lib/jquery-3.4.1.min.js"></script>
   <script src="lib/lodash.min.js"></script>
   <script src="lib/modernizr-3.8.0.min.js"></script>
 
+<!--  Add css files-->
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/zoom_drag.css">
+  <meta name="theme-color" content="#fafafa">
+
   <!--  Add Java script here-->
   <script src="js/Variables.js"></script>
   <script src="js/learnPCA.js"></script>
+</head>
+
+<body>
+  <!--Design body of the web-->
+<!--  <svg id="axis-svg" class="plot"></svg>-->
+<!--  <canvas id="plot-canvas" class="plot"></canvas>-->
+
+  <div id="myDiv"></div>
+  <div id="myDiv2"></div>
 
 </body>
 
