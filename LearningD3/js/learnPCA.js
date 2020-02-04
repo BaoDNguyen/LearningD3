@@ -1,6 +1,7 @@
 Bao.linearAlgebra = new Lalolab('labname',false,'lib/lalolib');
 
 Promise.all([
+    // d3.csv('data/sonar_csv.csv')
     d3.csv('data/Iris_data_set.txt')
 ]).then(function (file) {
     // build input matries
@@ -9,7 +10,6 @@ Promise.all([
     let nTrain = file[0].length;
     let nGroup = 3;
     let groupName = [];
-    console.log(groupName);
     let dataArr = [];
     for (let i = 0; i <= nVar; i++) {
         dataArr[i] = [];
@@ -98,15 +98,15 @@ Promise.all([
         dataPCA[i] = {};
         dataPCA[i].mode = 'markers';
         dataPCA[i].type = 'scatter';
-        dataPCA[i].name = 'Principal component ' + i;
-        dataPCA[i].marker = {size: 12};
+        dataPCA[i].name = groupName[i];
+        dataPCA[i].marker = {size: 6};
         dataPCA[i].x = [];
         dataPCA[i].y = [];
         dataSPCA[i] = {};
         dataSPCA[i].mode = 'markers';
         dataSPCA[i].type = 'scatter';
         dataSPCA[i].name = groupName[i];
-        dataSPCA[i].marker = {size: 12};
+        dataSPCA[i].marker = {size: 6};
         dataSPCA[i].x = [];
         dataSPCA[i].y = [];
         let count = 0;
@@ -138,7 +138,6 @@ Promise.all([
         },
         title:'Supervised PCA'
     };
-    console.log(dataArr);
     Plotly.newPlot('myDiv', dataPCA, layoutPCA);
     Plotly.newPlot('myDiv2', dataSPCA, layoutSPCA);
 });
