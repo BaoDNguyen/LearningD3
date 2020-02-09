@@ -15,7 +15,7 @@ var fullWidth = 500;
 var fullHeight = 500;
 var margin = {top: 10, right: 10, bottom: 30, left: 30};
 var width = fullWidth - margin.left - margin.right;
-var height = fullHeight -// generate random dataset
+var height = fullHeight - margin.top - margin.bottom;   // generate random dataset
 var randomX = d3.randomNormal(0, 30);
 var randomY = d3.randomNormal(0, 30); margin.top - margin.bottom;
 
