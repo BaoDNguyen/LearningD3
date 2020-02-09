@@ -5,9 +5,10 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 export class DR {
-    constructor(name,data) {
+    constructor(name,data,parameters) {
         this.name = name;
         this.data = data.map(element=>element.map(element_=>element_));     // space: O(NxD), time: O(NxD)
+        this.parameters = parameters;
     }
 
     // CONTROL COMPUTATIONS
@@ -17,6 +18,23 @@ export class DR {
                 this.computePCA();
                 break;
         }
+    }
+
+    // COMPUTE PCA
+    computePCA() {
+        let data = DR.standardize(this.data);
+        let X = array2mat(data);
+        let S = DR.covarianceMatrix(X);
+        let N = X.size[0];
+        let D = X.size[1];
+        let eigenMatrix = eigs(S,D);
+        let eigenValues = eigenMatrix.V;
+        let M = transpose(array2mat([eigenMatrix.U.val.slice(0,D),eigenMatrix.U.val.slice(D,2*D)]));
+        let Y = mul(X,M);
+        let sum = 0;
+        sum = eigenValues.forEach(element=>sum += element);
+        let PCA = (eigenValues[0]+eigenValues[1])/sum;
+        return {result: Y, information: PCA};
     }
 
     // STANDARDIZE INPUT DATA
@@ -41,23 +59,6 @@ export class DR {
                 data[i][j] = (data[i][j]-myMean[j])/mySD[j];
             }
         }
-    }
-
-    // COMPUTE PCA
-    computePCA() {
-        let data = DR.standardize(this.data);
-        let X = array2mat(data);
-        let S = DR.covarianceMatrix(X);
-        let N = X.size[0];
-        let D = X.size[1];
-        let eigenMatrix = eigs(S,D);
-        let eigenValues = eigenMatrix.V;
-        let M = transpose(array2mat([eigenMatrix.U.val.slice(0,D),eigenMatrix.U.val.slice(D,2*D)]));
-        let Y = mul(X,M);
-        let sum = 0;
-        sum = eigenValues.forEach(element=>sum += element);
-        let PCA = (eigenValues[0]+eigenValues[1])/sum;
-        return {result: Y, information: PCA};
     }
 
     // COVARIANCE MATRIX
