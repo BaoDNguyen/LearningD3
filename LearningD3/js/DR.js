@@ -5,24 +5,14 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 export class DR {
-    constructor(name,data,parameters) {
-        this.name = name;
-        this.data = data.map(element=>element.map(element_=>element_));     // space: O(NxD), time: O(NxD)
-        this.parameters = parameters;
-    }
+    constructor() {
 
-    // CONTROL COMPUTATIONS
-    computeDR() {         // compute corresponding technique to this.name
-        switch (this.name) {
-            case 'PCA':
-                this.computePCA();
-                break;
-        }
     }
 
     // COMPUTE PCA
-    computePCA() {
-        let data = DR.standardize(this.data);
+    computePCA(data_) {
+        let rawData = data_.map(element=>element.map(element_=>element_));
+        let data = DR.standardize(rawData);
         let X = array2mat(data);
         let S = DR.covarianceMatrix(X);
         let N = X.size[0];
