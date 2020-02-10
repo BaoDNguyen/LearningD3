@@ -4,14 +4,14 @@
 // need to call computeDR()                                                                 //
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-export class DR {
-    constructor() {
-
+class DR {
+    constructor(data) {
+        this.data = data.map(element=>element.map(element_=>element_));
     }
 
     // COMPUTE PCA
-    computePCA(data_) {
-        let rawData = data_.map(element=>element.map(element_=>element_));
+    computePCA() {
+        let rawData = this.data.map(element=>element.map(element_=>element_));
         let data = DR.standardize(rawData);
         let X = array2mat(data);
         let S = DR.covarianceMatrix(X);
