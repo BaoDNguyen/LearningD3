@@ -6,19 +6,25 @@
 // LIMITS: #groups are less than or equal to 7                  //
 //////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////////
+// drawScatterplot: input data has two or three columns         //
+//////////////////////////////////////////////////////////////////
+
 class myDraw {
-    constructor(data,group,label,divID,parameter) {
-        this.data = data.map(element=>element.map(element_=>element_));
+    constructor(data,group,label,divID) {
+        this.data = data.map(element=>{
+            if (typeof(element) === 'object') return element.map(element_=>element_);
+            else return element;
+        });
         this.divID = divID;
         this.group = group;
         this.label = label.map(element=>element);
-        this.parameter = parameter;
     }
 
     // DRAW SPLOM
-    drawSPLOM () {
+    drawSPLOM (title) {
         let D = this.group ? this.data[0].length - 1 : this.data[0].length;
-        let groups = this.group ? this.getGroup(this.data) : [];                    // time: O(N)
+        let groups = this.group ? myDraw.getGroup(this.data) : [];                    // time: O(N)
         let nGroup = groups.length;
         let pl_colorScale = [];
         for (let i = 0; i < nGroup; i++) {
@@ -68,7 +74,7 @@ class myDraw {
             ticklen:D
         });
         let layout = {
-            title:'Scatterplot Matrix of the dataset',
+            title:title,
             height: 200*D,
             width: 200*D,
             autosize: false,
@@ -85,8 +91,100 @@ class myDraw {
         Plotly.react(this.divID, dataDraw, layout, {modeBarButtonsToRemove: ['toggleSpikelines']})
     }
 
+    // DRAW SCATTER PLOT
+    drawScatterplot(title) {
+        let groups = (this.group) ? myDraw.getGroup(this.data) : [];
+        let nGroup = groups.length;
+        let x = [], y =[];
+        if (this.group) {
+            for (let i = 0; i < nGroup; i++) {
+                x[i] = []; y[i] = [];
+                this.data.forEach(element=>{
+                    if (element[2] === groups[i]) {x[i].push(element[0]); y[i].push(element[1]);}
+                });
+            }
+        } else {
+            this.data.forEach((element,index)=>{
+                x[index] = element[0];
+                y[index] = element[1];
+            });
+        }
+        let dataDraw = [];
+        if (this.group) {
+            for (let i = 0; i < nGroup; i++) {
+                dataDraw[i] = {
+                    x: x[i],
+                    y: y[i],
+                    mode: 'markers',
+                    type: 'scatter',
+                    name: groups[i],
+                    marker: { size: 8 }
+                }
+            }
+        } else {
+            dataDraw[0] = {
+                x: x,
+                y: y,
+                mode: 'markers',
+                type: 'scatter',
+                marker: { size: 8 }
+            }
+        }
+        let axis = () => ({
+            showline:false,
+            zeroline:false,
+            gridcolor:'#ffff',
+            ticklen:2
+        });
+        let layout = {
+            title:title,
+            height: 600,
+            width: 600,
+            autosize: false,
+            hovermode:'closest',
+            dragmode:'select',
+            plot_bgcolor:'rgba(240,240,240, 0.95)',
+            xaxis:axis(),
+            yaxis:axis(),
+        };
+        Plotly.newPlot(this.divID,dataDraw,layout);
+    }
+
+    // HISTOGRAM
+    drawBarChart(title) {
+        let x = this.data;
+        let rows = (typeof(x[0]) === 'object') ? x.length : 1;
+        let dataDraw = [];
+        if (rows === 1) {
+            dataDraw[0] = {
+                x:x,
+                type: 'bar',
+                opacity: 1,
+                marker: {
+                    color: myDraw.colorBrew[0],
+                },
+            };
+        } else {
+            for (let i = 0; i < rows; i++) {
+                dataDraw[i] = {
+                    x:x[i],
+                    type: 'bar',
+                    opacity: 0.5,
+                    marker: {
+                        color: myDraw.colorBrew[i],
+                    },
+                };
+            }
+        }
+        let layout = {
+            title:title,
+            barmode:'overlay',
+        };
+        Plotly.newPlot(this.divID,dataDraw,layout);
+    }
+
     // get number of groups
-    getGroup(data_) {                       // time: O(N)
+    static getGroup(data_) {                       // time: O(N)
         let data = data_.map(element=>element.map(element_=>element_));
         let L = data[0].length;
         let groups = [];
