@@ -154,6 +154,11 @@ class myDraw {
     drawBarChart(title) {
         let x = this.data;
         let rows = (typeof(x[0]) === 'object') ? x.length : 1;
+        if (rows === 1) {
+            x = x.map(element=>element*100);
+        } else {
+            x = x.map(element=>element.map(element_=>element_*100));
+        }
         let dataDraw = [];
         if (rows === 1) {
             dataDraw[0] = {
@@ -180,7 +185,7 @@ class myDraw {
             title:title,
             barmode:'overlay',
         };
-        Plotly.newPlot(this.divID,dataDraw,layout);
+        Plotly.newPlot(this.divID,dataDraw,layout,{editable: true});
     }
 
     // get number of groups
