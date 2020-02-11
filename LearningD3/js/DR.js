@@ -157,21 +157,21 @@ class DR {
         let data = data_.map(element=>element.map(element_=>element_));
         let N = data.length;
         let D = (this.group) ? data[0].length - 1 : data[0].length;
-        let myMean = [], mySD = [];                          // space: O(D)
+        // let myMean = [], mySD = [];                          // space: O(D)
         // calculate mean and standard deviation
         // time: O(3NxD)
         for (let j = 0; j < D; j++) {
-            myMean[j] = 0; mySD[j] = 0;
+            let myMean = 0, mySD = 0;
             for (let i = 0; i < N; i++) {
-                myMean[j] += data[i][j];
+                myMean += data[i][j];
             }
-            myMean[j] /= N;
+            myMean = myMean/N;
             for (let i = 0; i < N; i++) {
-                mySD[j] += (data[i][j]-myMean[j])*(data[i][j]-myMean[j]);
+                mySD += (data[i][j]-myMean)*(data[i][j]-myMean);
             }
-            mySD[j] = Math.sqrt(mySD[j]/N);
+            mySD = Math.sqrt(mySD/N);
             for (let i = 0; i < N; i++) {
-                data[i][j] = (data[i][j]-myMean[j])/mySD[j];
+                data[i][j] = (data[i][j]-myMean)/mySD;
             }
         }
         return data;

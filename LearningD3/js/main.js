@@ -1,11 +1,11 @@
 
 Promise.all([
-    d3.csv('data/Iris_data_set.txt'),
+    d3.tsv('data/SwissRollDataset.txt'),
 ]).then(function (file) {
     Bao.data.values = [];
     Bao.data.label = [];
     Bao.data.label = file[0].columns;
-    Bao.data.group = true;
+    Bao.data.group = false;
     file[0].forEach((element,index)=>{
         Bao.data.values[index] = [];
         for (let i = 0; i < Bao.data.label.length; i++) {
@@ -16,18 +16,19 @@ Promise.all([
         }
     });
     let dataDraw = new myDraw(Bao.data.values,Bao.data.group,Bao.data.label,'myDiv');
-    dataDraw.drawSPLOM('Scatterplot matrix of Iris dataset');
-    let dataDR = new DR(Bao.data.values,true);
+    dataDraw.drawSPLOM('Scatterplot matrix of Swiss Roll dataset');
+    let dataDR = new DR(Bao.data.values,false);
     let dataPCA = dataDR.computePCA();
-    let pcaDraw = new myDraw(dataPCA.result,true,[],'myDiv2');
-    pcaDraw.drawScatterplot('PCA of Iris dataset');
-    let pcaHis = new myDraw(dataPCA.information,true,[],'myDiv3');
+    let pcaDraw = new myDraw(dataPCA.result,false,[],'myDiv2');
+    pcaDraw.drawScatterplot('PCA of Swiss Roll dataset');
+    let pcaHis = new myDraw(dataPCA.information,false,[],'myDiv3');
     pcaHis.drawBarChart('PCA percentage of variance');
-    let dataSPCA = dataDR.computeSupervisedPCA();
-    let spcaDraw = new myDraw(dataSPCA.result,true,[],'myDiv4');
-    spcaDraw.drawScatterplot('SPCA of Iris dataset');
-    let spcaHis = new myDraw(dataSPCA.information,true,[],'myDiv5');
-    spcaHis.drawBarChart('SPCA percentage of variance');
+    console.log(dataPCA);
+    // let dataSPCA = dataDR.computeSupervisedPCA();
+    // let spcaDraw = new myDraw(dataSPCA.result,false,[],'myDiv4');
+    // spcaDraw.drawScatterplot('SPCA of Iris dataset');
+    // let spcaHis = new myDraw(dataSPCA.information,false,[],'myDiv5');
+    // spcaHis.drawBarChart('SPCA percentage of variance');
     let dataKPCA  = dataDR.computeKernelPCA('Hyperbolic',1);
     let kpcaDraw = new myDraw(dataKPCA.result,true,[],'myDiv6');
     kpcaDraw.drawScatterplot('Kernel PCA of Iris dataset');
