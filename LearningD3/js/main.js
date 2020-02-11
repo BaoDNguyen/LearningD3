@@ -28,5 +28,9 @@ Promise.all([
     spcaDraw.drawScatterplot('SPCA of Iris dataset');
     let spcaHis = new myDraw(dataSPCA.information,true,[],'myDiv5');
     spcaHis.drawBarChart('SPCA percentage of variance');
-    console.log(dataPCA.information);
+    let dataKPCA  = dataDR.computeKernelPCA('Hyperbolic',1);
+    let kpcaDraw = new myDraw(dataKPCA.result,true,[],'myDiv6');
+    kpcaDraw.drawScatterplot('Kernel PCA of Iris dataset');
+    let kpcaHis = new myDraw(dataKPCA.information,true,[],'myDiv7');
+    kpcaHis.drawBarChart('KPCA percentage of variance');
 });

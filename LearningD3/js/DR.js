@@ -38,11 +38,11 @@ class DR {
         }
         let sum = 0;
         eigenValues.forEach(element=>sum += element);
-        let PCA = [];
+        let SPCA = [];
         for (let i = 0; i < D; i++) {
-            PCA[i] = eigenValues[i]/sum;
+            SPCA[i] = eigenValues[i]/sum;
         }
-        return {result: y, information: PCA};
+        return {result: y, information: SPCA};
     }
 
     // COMPUTE SUPERVISED PCA
@@ -87,6 +87,69 @@ class DR {
             }
             return {result: y, information: PCA};
         }
+    }
+
+    // KERNEL PCA
+    computeKernelPCA(kernel_function,parameter) {
+        let D = (this.group) ? this.data[0].length - 1 : this.data[0].length;
+        let N = this.data.length;
+        let rawData;
+        if (this.group) {                           // time: O(NxD)
+            rawData = [];
+            this.data.forEach((element,index)=>{
+                rawData[index] = [];
+                for (let i = 0; i < D; i++) {
+                    rawData[index][i] = element[i];
+                }
+            });
+        } else rawData = this.data.map(element=>element.map(element_=>element_));
+        let data = DR.standardize(rawData);
+        let kArr = [];
+        for (let i = 0; i < N; i++) {
+            kArr[i] = [];
+            for (let j = 0; j < N; j++) {
+                switch (kernel_function) {
+                    case 'Gaussian':
+                        kArr[i][j] = 0;
+                        for (let e = 0; e < D; e++) {
+                            kArr[i][j] += (data[i][e]-data[j][e])*(data[i][e]-data[j][e]);
+                        }
+                        kArr[i][j] = Math.exp(-parameter*kArr[i][j]);
+                        break;
+                    case 'Polynomial':
+                        kArr[i][j] = 0;
+                        for (let e = 0; e < D; e++) {
+                            kArr[i][j] += data[i][e]*data[j][e];
+                        }
+                        kArr[i][j] = Math.pow(1+kArr[i][j],parameter);
+                        break;
+                    case 'Hyperbolic':
+                        kArr[i][j] = 0;
+                        for (let e = 0; e < D; e++) {
+                            kArr[i][j] += data[i][e]*data[j][e];
+                        }
+                        kArr[i][j] = Math.tanh(kArr[i][j]+parameter);
+                        break;
+                }
+            }
+        }
+        let K = array2mat(kArr);
+        let norK = add(sub(K,mul(mul(ones(N,N),2/N),K)),mul(mul(mul(ones(N,N),1/N),K),mul(ones(N,N),1/N)));
+        let eigenMatrix = eigs(norK,N);
+        let eigenValues = eigenMatrix.V;
+        let M = transpose(array2mat([eigenMatrix.U.val.slice(0,N),eigenMatrix.U.val.slice(N,2*N)]));
+        let Y = mul(K,M);
+        let y = [];
+        for (let i = 0; i < N; i++) {
+            y[i] = (this.group) ? [get(Y,i,0),get(Y,i,1),this.data[i][D]] : [get(Y,i,0),get(Y,i,1)];
+        }
+        let sum = 0;
+        eigenValues.forEach(element=>sum += Math.abs(element));
+        let KPCA = [];
+        for (let i = 0; i < D; i++) {
+            KPCA[i] = Math.abs(eigenValues[i]/sum);
+        }
+        return {result: y, information: KPCA};
     }
 
     // STANDARDIZE INPUT DATA
