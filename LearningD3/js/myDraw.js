@@ -109,6 +109,10 @@ class myDraw {
                 y[index] = element[1];
             });
         }
+        let text = [];
+        this.data.forEach((element,index)=>{
+            text[index] = 'Point ' + index;
+        });
         let dataDraw = [];
         if (this.group) {
             for (let i = 0; i < nGroup; i++) {
@@ -118,6 +122,7 @@ class myDraw {
                     mode: 'markers',
                     type: 'scatter',
                     name: groups[i],
+                    text: text,
                     marker: { size: 8 }
                 }
             }
