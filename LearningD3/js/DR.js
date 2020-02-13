@@ -192,7 +192,7 @@ class DR {
                 manifoldDist[i][j] = (i === j) ? 0 : Infinity;
                 Q[j] = {'index': j, 'distance': manifoldDist[i][j]};
             }
-            while (Q.length > 0) {
+            while (Q.length > 5) {
                 let minDist = Infinity;
                 let minIndex = i;
                 for (let j = 0; j < Q.length; j++) {
@@ -200,12 +200,15 @@ class DR {
                     minDist = (minDist > Q[j].distance) ? Q[j].distance : minDist;
                 }
                 Q.splice(minIndex,1);
+                console.log('length Q: '+Q.length);
                 for (let n = 0; n < k; n++) {
-                    let index = AdjList[minIndex][n].index;
-                    let alt = minDist + AdjList[minIndex][n].weight;
-                    if (alt < Q[index].distance) {
-                        manifoldDist[i][index] = alt;
-                        Q[index].distance = alt;
+                    let index = Q.findIndex(element=>element.index === AdjList[minIndex][n].index);
+                    if (index !== -1) {
+                        let alt = minDist + AdjList[minIndex][n].weight;
+                        if (alt < Q[index].distance) {
+                            manifoldDist[i][AdjList[minIndex][n].index] = alt;
+                            Q[index].distance = alt;
+                        }
                     }
                 }
             }

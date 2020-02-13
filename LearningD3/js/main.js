@@ -15,6 +15,9 @@ Promise.all([
                 Bao.data.values[index][i] = +element[Bao.data.label[i]];
         }
     });
+    // remove randomly
+    myRemove(1590);
+
     let dataDraw = new myDraw(Bao.data.values,Bao.data.group,Bao.data.label,'myDiv');
     dataDraw.drawSPLOM('Scatterplot matrix of Iris dataset');
     let dataDR = new DR(Bao.data.values,false);
@@ -33,7 +36,14 @@ Promise.all([
     // kpcaDraw.drawScatterplot('Kernel PCA of Iris dataset');
     // let kpcaHis = new myDraw(dataKPCA.information,false,[],'myDiv7');
     // kpcaHis.drawBarChart('KPCA percentage of variance');
-    let dataISOMAP = dataDR.computeISOMAP(10);
+    let dataISOMAP = dataDR.computeISOMAP(5);
     let isomapDraw = new myDraw(dataISOMAP.result,false,[],'myDIv4');
     isomapDraw.drawScatterplot('ISOMAP of Swiss Roll dataset');
 });
+
+function myRemove(times) {
+    for (let i = 0; i < times; i++) {
+        let index = Math.floor(Math.random()*Bao.data.values.length);
+        Bao.data.values.splice(index,1);
+    }
+}
