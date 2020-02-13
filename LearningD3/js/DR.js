@@ -152,6 +152,77 @@ class DR {
         return {result: y, information: KPCA};
     }
 
+    // ISOMAP USING DIJKSTRA ALGORITHM
+    computeISOMAP(k_nearest_neighbor) {
+        let k = k_nearest_neighbor;
+        let D = (this.group) ? this.data[0].length - 1 : this.data[0].length;
+        let N = this.data.length;
+        let rawData;
+        if (this.group) {                           // time: O(NxD)
+            rawData = [];
+            this.data.forEach((element,index)=>{
+                rawData[index] = [];
+                for (let i = 0; i < D; i++) {
+                    rawData[index][i] = element[i];
+                }
+            });
+        } else rawData = this.data.map(element=>element.map(element_=>element_));
+        let data = DR.standardize(rawData);
+        let X = array2mat(data);
+        let AdjList = [];
+        for (let i = 0; i < N; i++) {
+            let sortArray = [];
+            for (let j = 0; j < N; j++) {
+                let EucDist = 0;
+                for (let d = 0; d < D; d++) {
+                    EucDist += (data[i][d]-data[j][d])*(data[i][d]-data[j][d]);
+                }
+                EucDist = Math.sqrt(EucDist);
+                sortArray[j] = {'weight':EucDist,'index':j};
+            }
+            sortArray.sort((element1,element2)=>element1.weight-element2.weight);
+            AdjList[i] = sortArray.slice(1,k+1);
+        }
+        // Dijkstra algorithm
+        let manifoldDist = [];
+        for (let i = 0; i < N; i++) {
+            manifoldDist[i] = [];
+            let Q = [];
+            for (let j = 0; j < N; j++) {
+                manifoldDist[i][j] = (i === j) ? 0 : Infinity;
+                Q[j] = {'index': j, 'distance': manifoldDist[i][j]};
+            }
+            while (Q.length > 0) {
+                let minDist = Infinity;
+                let minIndex = i;
+                for (let j = 0; j < Q.length; j++) {
+                    minIndex = (minDist > Q[j].distance) ? Q[j].index : minIndex;
+                    minDist = (minDist > Q[j].distance) ? Q[j].distance : minDist;
+                }
+                Q.splice(minIndex,1);
+                for (let n = 0; n < k; n++) {
+                    let index = AdjList[minIndex][n].index;
+                    let alt = minDist + AdjList[minIndex][n].weight;
+                    if (alt < Q[index].distance) {
+                        manifoldDist[i][index] = alt;
+                        Q[index].distance = alt;
+                    }
+                }
+            }
+        }
+        let DM = array2mat(manifoldDist);
+        let H = sub(eye(N,N),mul(ones(N,N),1/N));
+        let B = mul(-1/2,mul(H,mul(DM,H)));
+        let eigenMatrix = eigs(B,2);
+        let M = transpose(array2mat([eigenMatrix.U.val.slice(0,N),eigenMatrix.U.val.slice(N,2*N)]));
+        let Y = mul(X,M);
+        let y = [];
+        for (let i = 0; i < N; i++) {
+            y[i] = (this.group) ? [get(Y,i,0),get(Y,i,1),this.data[i][D]] : [get(Y,i,0),get(Y,i,1)];
+        }
+        return {result: y};
+    }
+
     // STANDARDIZE INPUT DATA
     static standardize(data_) {
         let data = data_.map(element=>element.map(element_=>element_));
