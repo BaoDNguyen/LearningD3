@@ -1,10 +1,10 @@
 
 Promise.all([
-    d3.csv('data/contry_code.csv'),
+    d3.csv('data/death_rate.csv'),
 ]).then(function (file) {
     console.log(file[0]);
-    let code = file[0].map(element=>[element["Country Code"],element["TableName"]]);
-    console.log(code);
+    let code = file[0].map(element=>[element["CountryCode"],'1',element['CountryName']]);
+    console.log(code.join());
     // Bao.data.values = [];
     // Bao.data.label = [];
     // Bao.data.label = file[0].columns;
