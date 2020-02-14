@@ -4,8 +4,6 @@ Promise.all([
 ]).then(function (file) {
     console.log(file[0]);
     let code = file[0].map(element=>[element["Country Code"],element["TableName"]]);
-    let myCode = [];
-    
     console.log(code);
     // Bao.data.values = [];
     // Bao.data.label = [];
