@@ -8,4 +8,5 @@ let Bao ={
         label: [],
         group: true,
     },
+    myData: [],
 };
