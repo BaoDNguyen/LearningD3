@@ -1,6 +1,7 @@
 Promise.all([
-    d3.csv('data/house_price.txt'),
-    d3.tsv('data/state_code.txt'),
+    d3.csv('data/male.txt'),
+    d3.csv('data/female.txt'),
+    d3.csv('data/country_code.csv')
 ]).then(function(file){
     let map = new Map();
     file[1].forEach((element,index)=>{
@@ -14,6 +15,9 @@ Promise.all([
             Bao.myData[0].push(','+'Q'+q+' '+year);
         }
     }
+    for (let i = 0; i < file[1].length; i++) {
+        Bao.myData[i+1] = [];
+    }
     let changeState = false;
     file[0].forEach((element,index)=>{
         if (index) changeState = element.state !== file[0][index - 1];
@@ -21,7 +25,6 @@ Promise.all([
         let timeCode = 'Q'+element.qtr+' '+element.yr;
         let value = element.index_sa;
         if (changeState) {
-            Bao.myData[sampleCode+1] = [];
             Bao.myData[sampleCode+1][0] = '0_'+sampleCode.toString();
             Bao.myData[sampleCode+1].push(value);
         } else {
