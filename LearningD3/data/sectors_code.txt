@@ -1,0 +1,12 @@
+code	name
+101	Goods-producing
+1011	Natural resources and mining
+1012	Construction
+1013	Manufacturing
+102	Service-providing
+1021	Trade, transportation, and utilities
+1022	Information
+1023	Financial activities
+1024	Professional and business services
+1025	Education and health services
+1026	Leisure and hospitality
